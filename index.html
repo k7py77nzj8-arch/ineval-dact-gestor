@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INEVAL · DACT · Gestor Documental</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #112240;
+    --navy3: #1a3060;
+    --blue: #4a9eff;
+    --blue2: #2d7dd2;
+    --gold: #f0a500;
+    --red: #e53e3e;
+    --green: #38a169;
+    --amber: #d69e2e;
+    --white: #f0f4ff;
+    --gray: #8899bb;
+    --border: rgba(74,158,255,0.15);
+    --card: rgba(17,34,64,0.8);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(74,158,255,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(240,165,0,0.05) 0%, transparent 50%);
+  }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* SETUP SCREEN */
+  #setup {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 40px 20px;
+  }
+  .setup-logo { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--blue); margin-bottom: 32px; opacity: 0.8; }
+  .setup-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+  .setup-sub { color: var(--gray); font-size: 14px; text-align: center; margin-bottom: 40px; }
+  .setup-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; width: 100%; max-width: 480px;
+    backdrop-filter: blur(12px);
+  }
+  .setup-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--blue); margin-bottom: 10px; }
+  .setup-input {
+    width: 100%; padding: 14px 16px; border-radius: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+    outline: none; transition: border 0.2s; margin-bottom: 8px;
+  }
+  .setup-input:focus { border-color: var(--blue); }
+  .setup-hint { font-size: 11px; color: var(--gray); margin-bottom: 24px; line-height: 1.5; }
+  .setup-hint a { color: var(--blue); text-decoration: none; }
+  .btn-main {
+    width: 100%; padding: 14px; border-radius: 10px;
+    background: var(--blue); border: none; color: white;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
+  }
+  .btn-main:hover { background: var(--blue2); transform: translateY(-1px); }
+
+  /* MAIN APP */
+  #app { display: none; }
+  .topbar {
+    background: rgba(10,22,40,0.95); border-bottom: 1px solid var(--border);
+    padding: 14px 28px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .topbar-badge { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--blue); border: 1px solid var(--border); padding: 3px 8px; border-radius: 4px; }
+  .topbar-title { font-size: 15px; font-weight: 700; }
+  .topbar-right { display: flex; gap: 10px; }
+  .btn-sm {
+    padding: 7px 16px; border-radius: 8px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none;
+    letter-spacing: 0.5px;
+  }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--gray); }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-accent { background: var(--blue); color: white; }
+  .btn-accent:hover { background: var(--blue2); }
+
+  .main { padding: 24px 28px; max-width: 1100px; margin: 0 auto; }
+
+  /* STATS */
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat {
+    padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--card); min-width: 100px; backdrop-filter: blur(8px);
+  }
+  .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 9px; letter-spacing: 1.5px; margin-top: 4px; opacity: 0.7; }
+
+  /* UPLOAD */
+  .upload-zone {
+    border: 2px dashed rgba(74,158,255,0.3); border-radius: 14px;
+    padding: 32px; text-align: center; cursor: pointer; background: var(--card);
+    transition: all 0.2s; margin-bottom: 20px; backdrop-filter: blur(8px);
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--blue); background: rgba(74,158,255,0.05); }
+  .upload-icon { font-size: 36px; margin-bottom: 10px; }
+  .upload-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .upload-sub { font-size: 12px; color: var(--gray); }
+  .loading-bar { width: 140px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin: 12px auto 0; }
+  .loading-inner { height: 100%; background: var(--blue); border-radius: 2px; animation: prog 1.5s ease-in-out infinite; width: 50%; }
+  @keyframes prog { 0%{margin-left:-50%} 100%{margin-left:100%} }
+  .upload-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+
+  /* TEXTAREA */
+  .paste-area {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; margin-bottom: 20px; display: none;
+  }
+  .paste-area.visible { display: block; }
+  .paste-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--blue); margin-bottom: 10px; }
+  textarea {
+    width: 100%; min-height: 130px; padding: 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    color: var(--white); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
+    line-height: 1.6; resize: none; outline: none; transition: border 0.2s;
+  }
+  textarea:focus { border-color: var(--blue); }
+  .paste-footer { display: flex; justify-content: flex-end; margin-top: 10px; }
+
+  /* ERROR */
+  .error-box {
+    padding: 12px 16px; border-radius: 10px; background: rgba(229,62,62,0.1);
+    border: 1px solid rgba(229,62,62,0.3); color: #fc8181;
+    font-size: 12px; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace;
+    display: none;
+  }
+  .error-box.visible { display: block; }
+
+  /* FILTERS */
+  .filters {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 20px; display: none; flex-direction: column; gap: 12px;
+    backdrop-filter: blur(8px);
+  }
+  .filters.visible { display: flex; }
+  .filter-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .search-input {
+    flex: 1; min-width: 200px; padding: 9px 14px; border-radius: 8px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--white); font-size: 12px; outline: none; transition: border 0.2s;
+  }
+  .search-input:focus { border-color: var(--blue); }
+  .search-input::placeholder { color: var(--gray); }
+  select {
+    padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05); color: var(--white);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; cursor: pointer; outline: none;
+  }
+  .fbtn {
+    padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: transparent; color: var(--gray); font-size: 10px; font-weight: 600;
+    cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: all 0.15s;
+  }
+  .fbtn.active { background: var(--blue); border-color: var(--blue); color: white; }
+  .fbtn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+  .divider { width: 1px; background: var(--border); margin: 0 4px; align-self: stretch; }
+
+  /* DOC LIST */
+  .doc-list { display: flex; flex-direction: column; gap: 8px; }
+  .list-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 1px; margin-bottom: 6px; }
+
+  .doc-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; transition: all 0.25s; backdrop-filter: blur(8px);
+  }
+  .doc-card:hover { border-color: rgba(74,158,255,0.3); }
+  .doc-header {
+    padding: 16px 20px; cursor: pointer;
+    display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; align-items: center;
+  }
+  .doc-num {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 11px; font-family: 'IBM Plex Mono', monospace;
+  }
+  .doc-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
+  .badge-cat {
+    padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 700;
+    letter-spacing: 1.2px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase;
+  }
+  .badge-prio {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace; border: 1px solid;
+  }
+  .badge-tipo { font-size: 9px; color: var(--gray); font-family: 'IBM Plex Mono', monospace; }
+  .doc-asunto { font-weight: 600; font-size: 14px; line-height: 1.3; margin-bottom: 3px; }
+  .doc-meta { font-size: 11px; color: var(--gray); font-family: 'IBM Plex Mono', monospace; }
+  .doc-deadline { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 120px; }
+  .deadline-date { font-size: 11px; color: var(--gray); font-family: 'IBM Plex Mono', monospace; }
+  .deadline-pill { padding: 2px 9px; border-radius: 4px; font-size: 10px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+  .chevron { font-size: 16px; color: var(--gray); transition: transform 0.2s; margin-top: 4px; }
+
+  .doc-body { display: none; border-top: 1px solid var(--border); padding: 18px 20px; background: rgba(255,255,255,0.02); }
+  .doc-body.open { display: block; }
+  .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+  .section-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
+  .section-lbl.blue { color: var(--blue); }
+  .section-lbl.gold { color: var(--gold); }
+  .section-txt { font-size: 13px; line-height: 1.6; color: rgba(240,244,255,0.8); }
+  .section-txt.bold { font-weight: 600; color: var(--white); }
+  .prio-note { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; border: 1px solid; }
+  .keywords { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .keyword { padding: 3px 10px; border-radius: 4px; background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.2); color: var(--blue); font-size: 10px; font-family: 'IBM Plex Mono', monospace; }
+  .doc-footer { display: flex; justify-content: flex-end; }
+  .btn-remove { padding: 6px 16px; border-radius: 8px; background: rgba(229,62,62,0.1); border: 1px solid rgba(229,62,62,0.3); color: #fc8181; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
+
+  /* EMPTY */
+  .empty { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 52px; margin-bottom: 16px; }
+  .empty-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .empty-sub { color: var(--gray); font-size: 13px; max-width: 340px; margin: 0 auto; line-height: 1.7; }
+
+  /* CAT COLORS */
+  .cat-evdo { background: rgba(74,158,255,0.15); color: #4a9eff; border-color: rgba(74,158,255,0.3); }
+  .cat-pisa { background: rgba(74,219,122,0.15); color: #4adb7a; border-color: rgba(74,219,122,0.3); }
+  .cat-conv { background: rgba(160,74,255,0.15); color: #c084ff; border-color: rgba(160,74,255,0.3); }
+  .cat-admin { background: rgba(255,154,74,0.15); color: #ff9a4a; border-color: rgba(255,154,74,0.3); }
+  .cat-legal { background: rgba(229,62,62,0.15); color: #fc8181; border-color: rgba(229,62,62,0.3); }
+  .cat-pres { background: rgba(74,255,212,0.15); color: #4affd4; border-color: rgba(74,255,212,0.3); }
+  .cat-rrhh { background: rgba(212,255,74,0.15); color: #a8d700; border-color: rgba(212,255,74,0.3); }
+  .cat-terr { background: rgba(74,122,255,0.15); color: #7a9eff; border-color: rgba(74,122,255,0.3); }
+  .cat-otro { background: rgba(136,153,187,0.15); color: #8899bb; border-color: rgba(136,153,187,0.3); }
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN -->
+<div id="setup">
+  <div class="setup-logo">INEVAL · DACT · SISTEMA DE GESTIÓN DOCUMENTAL</div>
+  <h1 class="setup-title">Matriz Inteligente de Documentos</h1>
+  <p class="setup-sub">Análisis automático con IA · Priorización · Seguimiento de plazos</p>
+  <div class="setup-card">
+    <div class="setup-label">API KEY DE CLAUDE (ANTHROPIC)</div>
+    <input class="setup-input" type="password" id="apiKeyInput" placeholder="sk-ant-api03-...">
+    <div class="setup-hint">
+      Obtén tu API key en <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key.<br>
+      La key se guarda solo en este navegador y nunca se comparte.
+    </div>
+    <button class="btn-main" onclick="iniciar()">INGRESAR AL SISTEMA →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-badge mono">INEVAL · DACT</span>
+      <span class="topbar-title">Gestor Documental Inteligente</span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-sm btn-outline" onclick="exportarCSV()">⬇ Exportar CSV</button>
+      <button class="btn-sm btn-outline" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stats" id="stats"></div>
+
+    <div class="upload-zone" id="uploadZone"
+      onclick="document.getElementById('fileInput').click()"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDrop(event)">
+      <div class="upload-icon">📄</div>
+      <div class="upload-title" id="uploadTitle">Arrastra documentos aquí o haz clic para seleccionar</div>
+      <div class="upload-sub">PDF, TXT · Múltiples archivos simultáneos</div>
+      <div class="loading-bar" id="loadingBar" style="display:none"><div class="loading-inner"></div></div>
+      <input type="file" id="fileInput" multiple accept=".pdf,.txt" style="display:none" onchange="handleFiles(this.files)">
+      <div class="upload-actions" onclick="event.stopPropagation()">
+        <button class="btn-sm btn-outline" onclick="togglePaste()">✏ Pegar texto</button>
+      </div>
+    </div>
+
+    <div class="paste-area" id="pasteArea">
+      <div class="paste-label">PEGAR CONTENIDO DEL DOCUMENTO</div>
+      <textarea id="textInput" placeholder="Pega aquí el contenido del memorando, oficio o circular..."></textarea>
+      <div class="paste-footer">
+        <button class="btn-sm btn-accent" onclick="procesarTexto()">⚡ Analizar documento</button>
+      </div>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="filters" id="filters">
+      <div class="filter-row">
+        <input class="search-input" id="searchInput" placeholder="🔍 Buscar en documentos…" oninput="renderDocs()">
+        <select id="ordenSelect" onchange="renderDocs()">
+          <option value="prioridad">Ordenar: Prioridad</option>
+          <option value="fecha_limite">Ordenar: Fecha límite</option>
+          <option value="fecha_remision">Ordenar: Fecha remisión</option>
+        </select>
+      </div>
+      <div class="filter-row" id="filterBtns"></div>
+    </div>
+
+    <div id="docContainer"></div>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `Eres un asistente especializado en análisis de documentos de gestión pública ecuatoriana del INEVAL (Instituto Nacional de Evaluación Educativa). Analiza el documento y extrae la información en formato JSON estricto, sin backticks ni texto adicional:
+{"fecha_remision":"DD/MM/AAAA o null","remitente":"unidad o persona que emite","destinatario":"a quién va dirigido","tipo_documento":"Memorando|Oficio|Circular|Informe|Resolución|Convocatoria|Otro","asunto":"asunto en máximo 15 palabras","resumen":"resumen en 2-3 oraciones","solicitud":"qué se pide exactamente en lenguaje accionable","fecha_limite":"DD/MM/AAAA o No especificada","categoria":"EVDO 2026|PISA/ERCE|Convenios|Administrativo|Legal|Presupuestario|RRHH|Territorial|Otro","prioridad":"Alta|Media|Baja","justificacion_prioridad":"razón breve","palabras_clave":["hasta","5","palabras"]}
+Prioridad Alta: fecha <3 días, autoridades nacionales, legal/sancionatorio. Media: 3-7 días o coordinación. Baja: sin urgencia.`;
+
+const CAT_MAP = {
+  "EVDO 2026":"evdo","PISA/ERCE":"pisa","Convenios":"conv",
+  "Administrativo":"admin","Legal":"legal","Presupuestario":"pres",
+  "RRHH":"rrhh","Territorial":"terr","Otro":"otro"
+};
+const PRIO_CFG = {
+  Alta:{icon:"◆",color:"#fc8181",bg:"rgba(229,62,62,0.1)",border:"rgba(229,62,62,0.3)"},
+  Media:{icon:"◈",color:"#f6c164",bg:"rgba(214,158,46,0.1)",border:"rgba(214,158,46,0.3)"},
+  Baja:{icon:"◇",color:"#68d391",bg:"rgba(56,161,105,0.1)",border:"rgba(56,161,105,0.3)"}
+};
+
+let docs = [];
+let apiKey = "";
+let filtroCategoria = "Todos";
+let filtroPrioridad = "Todas";
+
+function iniciar() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key || !key.startsWith('sk-')) { alert('Ingresa una API key válida de Anthropic (sk-ant-...)'); return; }
+  apiKey = key;
+  localStorage.setItem('ineval_apikey', key);
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderAll();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem('ineval_apikey');
+  apiKey = "";
+  docs = [];
+  document.getElementById('setup').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+window.onload = () => {
+  const saved = localStorage.getItem('ineval_apikey');
+  if (saved && saved.startsWith('sk-')) {
+    apiKey = saved;
+    document.getElementById('apiKeyInput').value = saved;
+    document.getElementById('setup').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderAll();
+  }
+};
+
+function togglePaste() {
+  document.getElementById('pasteArea').classList.toggle('visible');
+}
+
+function diasRestantes(f) {
+  if (!f || f === "No especificada" || f === "null") return null;
+  const p = f.split("/");
+  if (p.length !== 3) return null;
+  const fecha = new Date(parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  return Math.round((fecha - hoy) / 86400000);
+}
+
+function setLoading(val, msg) {
+  document.getElementById('uploadTitle').textContent = val ? `Analizando: ${msg}…` : "Arrastra documentos aquí o haz clic para seleccionar";
+  document.getElementById('loadingBar').style.display = val ? 'block' : 'none';
+}
+
+function showError(msg) {
+  const e = document.getElementById('errorBox');
+  e.textContent = "⚠ " + msg;
+  e.classList.add('visible');
+  setTimeout(() => e.classList.remove('visible'), 7000);
+}
+
+async function callClaude(messages) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-allow-browser": "true"
+    },
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYSTEM_PROMPT, messages })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  const raw = data.content?.[0]?.text || "{}";
+  return JSON.parse(raw.replace(/```json|```/g,"").trim());
+}
+
+async function handleFiles(files) {
+  for (const file of files) {
+    setLoading(true, file.name);
+    try {
+      let result;
+      if (file.type === "application/pdf") {
+        const b64 = await new Promise((res,rej) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result.split(",")[1]);
+          r.onerror = rej;
+          r.readAsDataURL(file);
+        });
+        result = await callClaude([{role:"user", content:[
+          {type:"document", source:{type:"base64", media_type:"application/pdf", data:b64}},
+          {type:"text", text:`Analiza este documento. Nombre: ${file.name}`}
+        ]}]);
+      } else {
+        const texto = await file.text();
+        result = await callClaude([{role:"user", content:`Analiza este documento:\nNombre: ${file.name}\n\n${texto}`}]);
+      }
+      docs.push({...result, _nombre: file.name});
+      renderAll();
+    } catch(e) { showError(`Error en ${file.name}: ${e.message}`); }
+  }
+  setLoading(false);
+  document.getElementById('fileInput').value = "";
+}
+
+async function procesarTexto() {
+  const txt = document.getElementById('textInput').value.trim();
+  if (!txt) return;
+  setLoading(true, "texto manual");
+  try {
+    const result = await callClaude([{role:"user", content:`Analiza este documento:\nNombre: Documento manual\n\n${txt}`}]);
+    docs.push({...result, _nombre:"Texto pegado"});
+    document.getElementById('textInput').value = "";
+    document.getElementById('pasteArea').classList.remove('visible');
+    renderAll();
+  } catch(e) { showError(e.message); }
+  setLoading(false);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  handleFiles([...e.dataTransfer.files]);
+}
+
+function renderStats() {
+  if (docs.length === 0) { document.getElementById('stats').innerHTML=''; return; }
+  const alta = docs.filter(d=>d.prioridad==="Alta").length;
+  const media = docs.filter(d=>d.prioridad==="Media").length;
+  const venc = docs.filter(d=>{ const r=diasRestantes(d.fecha_limite); return r!==null&&r<0; }).length;
+  const hoy2 = docs.filter(d=>diasRestantes(d.fecha_limite)===0).length;
+  const items = [
+    {label:"TOTAL",val:docs.length,color:"#4a9eff"},
+    {label:"ALTA PRIORIDAD",val:alta,color:"#fc8181"},
+    {label:"MEDIA PRIORIDAD",val:media,color:"#f6c164"},
+    {label:"VENCIDOS",val:venc,color:"#fc8181"},
+    {label:"VENCE HOY",val:hoy2,color:"#ff9a4a"},
+  ];
+  document.getElementById('stats').innerHTML = items.map(s=>`
+    <div class="stat" style="border-color:${s.color}22">
+      <div class="stat-val mono" style="color:${s.color}">${s.val}</div>
+      <div class="stat-label mono" style="color:${s.color}">${s.label}</div>
+    </div>`).join('');
+}
+
+function renderFilters() {
+  const f = document.getElementById('filters');
+  if (docs.length === 0) { f.classList.remove('visible'); return; }
+  f.classList.add('visible');
+  const prios = ["Todas","Alta","Media","Baja"];
+  const cats = ["Todos","EVDO 2026","PISA/ERCE","Convenios","Administrativo","Legal","Presupuestario","RRHH","Territorial"];
+  document.getElementById('filterBtns').innerHTML =
+    prios.map(p=>`<button class="fbtn${filtroPrioridad===p?' active':''}" onclick="filtroPrioridad='${p}';renderAll()">${p==="Alta"?"◆ ":p==="Media"?"◈ ":p==="Baja"?"◇ ":"◉ "}${p}</button>`).join('') +
+    '<div class="divider"></div>' +
+    cats.map(c=>`<button class="fbtn${filtroCategoria===c?' active':''}" onclick="filtroCategoria='${c}';renderAll()">${c}</button>`).join('');
+}
+
+function renderDocs() {
+  const busq = (document.getElementById('searchInput')?.value||"").toLowerCase();
+  const orden = document.getElementById('ordenSelect')?.value||"prioridad";
+  let filtered = docs.filter(d => {
+    const mc = filtroCategoria==="Todos" || d.categoria===filtroCategoria;
+    const mp = filtroPrioridad==="Todas" || d.prioridad===filtroPrioridad;
+    const mb = !busq || [d.asunto,d.remitente,d.resumen,d.solicitud,...(d.palabras_clave||[])].some(t=>t?.toLowerCase().includes(busq));
+    return mc&&mp&&mb;
+  });
+  filtered.sort((a,b) => {
+    if (orden==="prioridad") { const p={Alta:0,Media:1,Baja:2}; return (p[a.prioridad]??3)-(p[b.prioridad]??3); }
+    if (orden==="fecha_limite") { return (diasRestantes(a.fecha_limite)??9999)-(diasRestantes(b.fecha_limite)??9999); }
+    return (a.fecha_remision||"").localeCompare(b.fecha_remision||"");
+  });
+
+  const cont = document.getElementById('docContainer');
+  if (docs.length === 0) {
+    cont.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Sin documentos aún</div><div class="empty-sub">Sube archivos PDF o pega el contenido de un memorando, oficio o circular para que la IA lo analice automáticamente</div></div>`;
+    return;
+  }
+  if (filtered.length === 0) {
+    cont.innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray);font-size:13px">Sin resultados para los filtros seleccionados</div>`;
+    return;
+  }
+
+  cont.innerHTML = `<div class="list-meta">${filtered.length} DOCUMENTO${filtered.length!==1?"S":""} · CLICK PARA EXPANDIR</div>` +
+    `<div class="doc-list">` +
+    filtered.map((doc,i) => {
+      const catKey = CAT_MAP[doc.categoria]||"otro";
+      const prio = PRIO_CFG[doc.prioridad]||PRIO_CFG["Baja"];
+      const dias = diasRestantes(doc.fecha_limite);
+      const dlColor = dias===null?"var(--gray)":dias<0?"#fc8181":dias<=2?"#ff9a4a":dias<=7?"#f6c164":"#68d391";
+      const dlBg = dias===null?"transparent":dias<0?"rgba(229,62,62,0.15)":dias<=2?"rgba(255,154,74,0.15)":dias<=7?"rgba(214,158,46,0.15)":"rgba(56,161,105,0.15)";
+      const dlLabel = dias===null?"—":dias<0?`Vencido (${Math.abs(dias)}d)`:dias===0?"HOY":`${dias}d restantes`;
+      const realIdx = docs.indexOf(doc);
+      return `
+      <div class="doc-card" id="card-${realIdx}">
+        <div class="doc-header" onclick="toggleCard(${realIdx})">
+          <div class="doc-num cat-${catKey}">${String(i+1).padStart(2,"0")}</div>
+          <div style="min-width:0">
+            <div class="doc-badges">
+              <span class="badge-cat cat-${catKey}">${doc.categoria||"Otro"}</span>
+              <span class="badge-prio" style="color:${prio.color};background:${prio.bg};border-color:${prio.border}">${prio.icon} ${(doc.prioridad||"Baja").toUpperCase()}</span>
+              <span class="badge-tipo">${doc.tipo_documento||""}</span>
+            </div>
+            <div class="doc-asunto">${doc.asunto||"Sin asunto"}</div>
+            <div class="doc-meta">${doc.remitente||"?"} → ${doc.destinatario||"?"} · ${doc.fecha_remision||"Sin fecha"}</div>
+          </div>
+          <div class="doc-deadline">
+            <span class="deadline-date">${doc.fecha_limite&&doc.fecha_limite!=="No especificada"?doc.fecha_limite:""}</span>
+            <span class="deadline-pill" style="color:${dlColor};background:${dlBg}">${dlLabel}</span>
+            <span class="chevron" id="chev-${realIdx}">▾</span>
+          </div>
+        </div>
+        <div class="doc-body" id="body-${realIdx}">
+          <div class="doc-grid">
+            <div>
+              <div class="section-lbl blue">RESUMEN EJECUTIVO</div>
+              <div class="section-txt">${doc.resumen||""}</div>
+            </div>
+            <div>
+              <div class="section-lbl gold">SE REQUIERE / ACCIÓN</div>
+              <div class="section-txt bold">${doc.solicitud||""}</div>
+            </div>
+          </div>
+          ${doc.justificacion_prioridad?`<div class="prio-note" style="color:${prio.color};background:${prio.bg};border-color:${prio.border}"><strong>Prioridad ${doc.prioridad}:</strong> ${doc.justificacion_prioridad}</div>`:""}
+          ${(doc.palabras_clave||[]).length?`<div class="keywords">${(doc.palabras_clave||[]).map(k=>`<span class="keyword">#${k}</span>`).join("")}</div>`:""}
+          <div class="doc-footer">
+            <button class="btn-remove" onclick="removeDoc(${realIdx})">✕ Eliminar</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('') + `</div>`;
+}
+
+function toggleCard(idx) {
+  const body = document.getElementById('body-'+idx);
+  const chev = document.getElementById('chev-'+idx);
+  const open = body.classList.toggle('open');
+  chev.style.transform = open ? 'rotate(180deg)' : 'rotate(0)';
+  if(open) document.getElementById('card-'+idx).style.borderColor='rgba(74,158,255,0.4)';
+  else document.getElementById('card-'+idx).style.borderColor='';
+}
+
+function removeDoc(idx) { docs.splice(idx,1); renderAll(); }
+
+function renderAll() { renderStats(); renderFilters(); renderDocs(); }
+
+function exportarCSV() {
+  if(docs.length===0){alert('No hay documentos para exportar');return;}
+  const headers = ["N°","Archivo","Fecha Remisión","Remitente","Destinatario","Tipo","Asunto","Resumen","Se Requiere","Fecha Límite","Días Restantes","Categoría","Prioridad","Justificación Prioridad","Palabras Clave"];
+  const rows = docs.map((d,i)=>[
+    i+1, d._nombre||"", d.fecha_remision||"", d.remitente||"", d.destinatario||"",
+    d.tipo_documento||"", d.asunto||"", d.resumen||"", d.solicitud||"",
+    d.fecha_limite||"", diasRestantes(d.fecha_limite)??"",
+    d.categoria||"", d.prioridad||"", d.justificacion_prioridad||"",
+    (d.palabras_clave||[]).join(", ")
+  ]);
+  const csv = [headers,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download=`INEVAL_DACT_Matriz_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+renderAll();
+</script>
+</body>
+</html>
