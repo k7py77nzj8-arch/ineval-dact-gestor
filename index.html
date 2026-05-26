@@ -390,7 +390,7 @@ async function callClaude(messages) {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
     },
-    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYSTEM_PROMPT, messages })
+    body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1000, system: SYSTEM_PROMPT, messages })
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
