@@ -32,7 +32,7 @@
       radial-gradient(ellipse at 80% 90%, rgba(240,165,0,0.05) 0%, transparent 50%);
   }
   .mono { font-family: 'IBM Plex Mono', monospace; }
-
+ 
   /* SETUP SCREEN */
   #setup {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -63,7 +63,7 @@
     cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
   }
   .btn-main:hover { background: var(--blue2); transform: translateY(-1px); }
-
+ 
   /* MAIN APP */
   #app { display: none; }
   .topbar {
@@ -84,9 +84,9 @@
   .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
   .btn-accent { background: var(--blue); color: white; }
   .btn-accent:hover { background: var(--blue2); }
-
+ 
   .main { padding: 24px 28px; max-width: 1100px; margin: 0 auto; }
-
+ 
   /* STATS */
   .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
   .stat {
@@ -95,7 +95,7 @@
   }
   .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 700; line-height: 1; }
   .stat-label { font-size: 9px; letter-spacing: 1.5px; margin-top: 4px; opacity: 0.7; }
-
+ 
   /* UPLOAD */
   .upload-zone {
     border: 2px dashed rgba(74,158,255,0.3); border-radius: 14px;
@@ -110,7 +110,7 @@
   .loading-inner { height: 100%; background: var(--blue); border-radius: 2px; animation: prog 1.5s ease-in-out infinite; width: 50%; }
   @keyframes prog { 0%{margin-left:-50%} 100%{margin-left:100%} }
   .upload-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
-
+ 
   /* TEXTAREA */
   .paste-area {
     background: var(--card); border: 1px solid var(--border); border-radius: 14px;
@@ -126,7 +126,7 @@
   }
   textarea:focus { border-color: var(--blue); }
   .paste-footer { display: flex; justify-content: flex-end; margin-top: 10px; }
-
+ 
   /* ERROR */
   .error-box {
     padding: 12px 16px; border-radius: 10px; background: rgba(229,62,62,0.1);
@@ -135,7 +135,7 @@
     display: none;
   }
   .error-box.visible { display: block; }
-
+ 
   /* FILTERS */
   .filters {
     background: var(--card); border: 1px solid var(--border); border-radius: 14px;
@@ -164,11 +164,11 @@
   .fbtn.active { background: var(--blue); border-color: var(--blue); color: white; }
   .fbtn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
   .divider { width: 1px; background: var(--border); margin: 0 4px; align-self: stretch; }
-
+ 
   /* DOC LIST */
   .doc-list { display: flex; flex-direction: column; gap: 8px; }
   .list-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 1px; margin-bottom: 6px; }
-
+ 
   .doc-card {
     background: var(--card); border: 1px solid var(--border); border-radius: 14px;
     overflow: hidden; transition: all 0.25s; backdrop-filter: blur(8px);
@@ -200,7 +200,7 @@
   .deadline-date { font-size: 11px; color: var(--gray); font-family: 'IBM Plex Mono', monospace; }
   .deadline-pill { padding: 2px 9px; border-radius: 4px; font-size: 10px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
   .chevron { font-size: 16px; color: var(--gray); transition: transform 0.2s; margin-top: 4px; }
-
+ 
   .doc-body { display: none; border-top: 1px solid var(--border); padding: 18px 20px; background: rgba(255,255,255,0.02); }
   .doc-body.open { display: block; }
   .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
@@ -214,13 +214,13 @@
   .keyword { padding: 3px 10px; border-radius: 4px; background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.2); color: var(--blue); font-size: 10px; font-family: 'IBM Plex Mono', monospace; }
   .doc-footer { display: flex; justify-content: flex-end; }
   .btn-remove { padding: 6px 16px; border-radius: 8px; background: rgba(229,62,62,0.1); border: 1px solid rgba(229,62,62,0.3); color: #fc8181; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
-
+ 
   /* EMPTY */
   .empty { text-align: center; padding: 60px 20px; }
   .empty-icon { font-size: 52px; margin-bottom: 16px; }
   .empty-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
   .empty-sub { color: var(--gray); font-size: 13px; max-width: 340px; margin: 0 auto; line-height: 1.7; }
-
+ 
   /* CAT COLORS */
   .cat-evdo { background: rgba(74,158,255,0.15); color: #4a9eff; border-color: rgba(74,158,255,0.3); }
   .cat-pisa { background: rgba(74,219,122,0.15); color: #4adb7a; border-color: rgba(74,219,122,0.3); }
@@ -234,7 +234,7 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- SETUP SCREEN -->
 <div id="setup">
   <div class="setup-logo">INEVAL · DACT · SISTEMA DE GESTIÓN DOCUMENTAL</div>
@@ -250,7 +250,7 @@
     <button class="btn-main" onclick="iniciar()">INGRESAR AL SISTEMA →</button>
   </div>
 </div>
-
+ 
 <!-- MAIN APP -->
 <div id="app">
   <div class="topbar">
@@ -263,10 +263,10 @@
       <button class="btn-sm btn-outline" onclick="cerrarSesion()">Cerrar sesión</button>
     </div>
   </div>
-
+ 
   <div class="main">
     <div class="stats" id="stats"></div>
-
+ 
     <div class="upload-zone" id="uploadZone"
       onclick="document.getElementById('fileInput').click()"
       ondragover="event.preventDefault();this.classList.add('drag')"
@@ -281,7 +281,7 @@
         <button class="btn-sm btn-outline" onclick="togglePaste()">✏ Pegar texto</button>
       </div>
     </div>
-
+ 
     <div class="paste-area" id="pasteArea">
       <div class="paste-label">PEGAR CONTENIDO DEL DOCUMENTO</div>
       <textarea id="textInput" placeholder="Pega aquí el contenido del memorando, oficio o circular..."></textarea>
@@ -289,9 +289,9 @@
         <button class="btn-sm btn-accent" onclick="procesarTexto()">⚡ Analizar documento</button>
       </div>
     </div>
-
+ 
     <div class="error-box" id="errorBox"></div>
-
+ 
     <div class="filters" id="filters">
       <div class="filter-row">
         <input class="search-input" id="searchInput" placeholder="🔍 Buscar en documentos…" oninput="renderDocs()">
@@ -303,16 +303,16 @@
       </div>
       <div class="filter-row" id="filterBtns"></div>
     </div>
-
+ 
     <div id="docContainer"></div>
   </div>
 </div>
-
+ 
 <script>
 const SYSTEM_PROMPT = `Eres un asistente especializado en análisis de documentos de gestión pública ecuatoriana del INEVAL (Instituto Nacional de Evaluación Educativa). Analiza el documento y extrae la información en formato JSON estricto, sin backticks ni texto adicional:
 {"fecha_remision":"DD/MM/AAAA o null","remitente":"unidad o persona que emite","destinatario":"a quién va dirigido","tipo_documento":"Memorando|Oficio|Circular|Informe|Resolución|Convocatoria|Otro","asunto":"asunto en máximo 15 palabras","resumen":"resumen en 2-3 oraciones","solicitud":"qué se pide exactamente en lenguaje accionable","fecha_limite":"DD/MM/AAAA o No especificada","categoria":"EVDO 2026|PISA/ERCE|Convenios|Administrativo|Legal|Presupuestario|RRHH|Territorial|Otro","prioridad":"Alta|Media|Baja","justificacion_prioridad":"razón breve","palabras_clave":["hasta","5","palabras"]}
 Prioridad Alta: fecha <3 días, autoridades nacionales, legal/sancionatorio. Media: 3-7 días o coordinación. Baja: sin urgencia.`;
-
+ 
 const CAT_MAP = {
   "EVDO 2026":"evdo","PISA/ERCE":"pisa","Convenios":"conv",
   "Administrativo":"admin","Legal":"legal","Presupuestario":"pres",
@@ -323,12 +323,12 @@ const PRIO_CFG = {
   Media:{icon:"◈",color:"#f6c164",bg:"rgba(214,158,46,0.1)",border:"rgba(214,158,46,0.3)"},
   Baja:{icon:"◇",color:"#68d391",bg:"rgba(56,161,105,0.1)",border:"rgba(56,161,105,0.3)"}
 };
-
+ 
 let docs = [];
 let apiKey = "";
 let filtroCategoria = "Todos";
 let filtroPrioridad = "Todas";
-
+ 
 function iniciar() {
   const key = document.getElementById('apiKeyInput').value.trim();
   if (!key || !key.startsWith('sk-')) { alert('Ingresa una API key válida de Anthropic (sk-ant-...)'); return; }
@@ -338,7 +338,7 @@ function iniciar() {
   document.getElementById('app').style.display = 'block';
   renderAll();
 }
-
+ 
 function cerrarSesion() {
   localStorage.removeItem('ineval_apikey');
   apiKey = "";
@@ -346,7 +346,7 @@ function cerrarSesion() {
   document.getElementById('setup').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
 }
-
+ 
 window.onload = () => {
   const saved = localStorage.getItem('ineval_apikey');
   if (saved && saved.startsWith('sk-')) {
@@ -357,11 +357,11 @@ window.onload = () => {
     renderAll();
   }
 };
-
+ 
 function togglePaste() {
   document.getElementById('pasteArea').classList.toggle('visible');
 }
-
+ 
 function diasRestantes(f) {
   if (!f || f === "No especificada" || f === "null") return null;
   const p = f.split("/");
@@ -370,19 +370,19 @@ function diasRestantes(f) {
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   return Math.round((fecha - hoy) / 86400000);
 }
-
+ 
 function setLoading(val, msg) {
   document.getElementById('uploadTitle').textContent = val ? `Analizando: ${msg}…` : "Arrastra documentos aquí o haz clic para seleccionar";
   document.getElementById('loadingBar').style.display = val ? 'block' : 'none';
 }
-
+ 
 function showError(msg) {
   const e = document.getElementById('errorBox');
   e.textContent = "⚠ " + msg;
   e.classList.add('visible');
   setTimeout(() => e.classList.remove('visible'), 7000);
 }
-
+ 
 async function callClaude(messages) {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -390,6 +390,7 @@ async function callClaude(messages) {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
       "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-allow-browser": "true",
       "anthropic-dangerous-allow-browser": "true"
     },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYSTEM_PROMPT, messages })
@@ -399,7 +400,7 @@ async function callClaude(messages) {
   const raw = data.content?.[0]?.text || "{}";
   return JSON.parse(raw.replace(/```json|```/g,"").trim());
 }
-
+ 
 async function handleFiles(files) {
   for (const file of files) {
     setLoading(true, file.name);
@@ -427,7 +428,7 @@ async function handleFiles(files) {
   setLoading(false);
   document.getElementById('fileInput').value = "";
 }
-
+ 
 async function procesarTexto() {
   const txt = document.getElementById('textInput').value.trim();
   if (!txt) return;
@@ -441,13 +442,13 @@ async function procesarTexto() {
   } catch(e) { showError(e.message); }
   setLoading(false);
 }
-
+ 
 function handleDrop(e) {
   e.preventDefault();
   document.getElementById('uploadZone').classList.remove('drag');
   handleFiles([...e.dataTransfer.files]);
 }
-
+ 
 function renderStats() {
   if (docs.length === 0) { document.getElementById('stats').innerHTML=''; return; }
   const alta = docs.filter(d=>d.prioridad==="Alta").length;
@@ -467,7 +468,7 @@ function renderStats() {
       <div class="stat-label mono" style="color:${s.color}">${s.label}</div>
     </div>`).join('');
 }
-
+ 
 function renderFilters() {
   const f = document.getElementById('filters');
   if (docs.length === 0) { f.classList.remove('visible'); return; }
@@ -479,7 +480,7 @@ function renderFilters() {
     '<div class="divider"></div>' +
     cats.map(c=>`<button class="fbtn${filtroCategoria===c?' active':''}" onclick="filtroCategoria='${c}';renderAll()">${c}</button>`).join('');
 }
-
+ 
 function renderDocs() {
   const busq = (document.getElementById('searchInput')?.value||"").toLowerCase();
   const orden = document.getElementById('ordenSelect')?.value||"prioridad";
@@ -494,7 +495,7 @@ function renderDocs() {
     if (orden==="fecha_limite") { return (diasRestantes(a.fecha_limite)??9999)-(diasRestantes(b.fecha_limite)??9999); }
     return (a.fecha_remision||"").localeCompare(b.fecha_remision||"");
   });
-
+ 
   const cont = document.getElementById('docContainer');
   if (docs.length === 0) {
     cont.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Sin documentos aún</div><div class="empty-sub">Sube archivos PDF o pega el contenido de un memorando, oficio o circular para que la IA lo analice automáticamente</div></div>`;
@@ -504,7 +505,7 @@ function renderDocs() {
     cont.innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray);font-size:13px">Sin resultados para los filtros seleccionados</div>`;
     return;
   }
-
+ 
   cont.innerHTML = `<div class="list-meta">${filtered.length} DOCUMENTO${filtered.length!==1?"S":""} · CLICK PARA EXPANDIR</div>` +
     `<div class="doc-list">` +
     filtered.map((doc,i) => {
@@ -554,7 +555,7 @@ function renderDocs() {
       </div>`;
     }).join('') + `</div>`;
 }
-
+ 
 function toggleCard(idx) {
   const body = document.getElementById('body-'+idx);
   const chev = document.getElementById('chev-'+idx);
@@ -563,11 +564,11 @@ function toggleCard(idx) {
   if(open) document.getElementById('card-'+idx).style.borderColor='rgba(74,158,255,0.4)';
   else document.getElementById('card-'+idx).style.borderColor='';
 }
-
+ 
 function removeDoc(idx) { docs.splice(idx,1); renderAll(); }
-
+ 
 function renderAll() { renderStats(); renderFilters(); renderDocs(); }
-
+ 
 function exportarCSV() {
   if(docs.length===0){alert('No hay documentos para exportar');return;}
   const headers = ["N°","Archivo","Fecha Remisión","Remitente","Destinatario","Tipo","Asunto","Resumen","Se Requiere","Fecha Límite","Días Restantes","Categoría","Prioridad","Justificación Prioridad","Palabras Clave"];
@@ -585,7 +586,7 @@ function exportarCSV() {
   a.href=url; a.download=`INEVAL_DACT_Matriz_${new Date().toISOString().slice(0,10)}.csv`;
   a.click(); URL.revokeObjectURL(url);
 }
-
+ 
 renderAll();
 </script>
 </body>
